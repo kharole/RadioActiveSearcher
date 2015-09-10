@@ -40,13 +40,12 @@ object RadioActive {
   def beep(combinations: Set[BitSet], test: BitSet): (Set[BitSet], Set[BitSet]) =
     combinations.partition(s => (s & test).isEmpty)
 
-  def testPlan(combinations: Set[BitSet], attempts: Int): Vector[(BitSet, Set[BitSet], Set[BitSet])] = {
+  def testPlan(combinations: Set[BitSet], attempts: Int): Vector[(BitSet, Set[BitSet], Set[BitSet])] =
     (for {
       test <- (BitSet.empty ++ combinations.flatMap(_.toSet)).subsets()
       testResults = beep(combinations, test)
       if (feasible(testResults._1, attempts) && feasible(testResults._2, attempts))
-    } yield (test, testResults._1, testResults._2)).toVector.sortBy(t => -Math.abs(t._2.size - t._3.size))
-  }
+    } yield (test, testResults._1, testResults._2)).toVector.reverse
 
   def feasible[A](combinations: Set[A], attempts: Int) = combinations.size <= (1 << attempts)
 }

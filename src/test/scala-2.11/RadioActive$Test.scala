@@ -19,12 +19,14 @@ class RadioActive$Test extends org.scalatest.FunSuite {
   }
 
   test("no way to check 105 combination with 2^6 tests") {
-    assert(RadioActive.solvable(puzzle(2, 15), 6))
+    assert(!RadioActive.solvable(puzzle(2, 15), 6))
   }
 
   test("2 radioactive among 15 is solvable with 7 tests") {
     val solutions = RadioActive.solve(puzzle(2, 15), 7)
-    println(solutions.filter(_.isDefined).head.get)
+    val tree: Tree[BitSet] = solutions.filter(_.isDefined).head.get
+    println(tree)
+    assert(tree.leafCount == 105)
   }
 
   test("2 radioactive among 11 is not solvable with 6 tests") {
@@ -32,7 +34,7 @@ class RadioActive$Test extends org.scalatest.FunSuite {
   }
 
   test("couple of them") {
-    assert(RadioActive.solvable(puzzle(2, 6), 4))
+    assert(RadioActive.solvable(puzzle(2, 5), 4))
   }
 
   test("simple") {
@@ -47,7 +49,6 @@ class RadioActive$Test extends org.scalatest.FunSuite {
 
   test("println") {
     println(RadioActive.solve(puzzle(1, 3), 3).filter(_.isDefined).head.get)
-    println(RadioActive.solve(puzzle(1, 100), 0).filter(_.isDefined).head.get)
     println(RadioActive.solve(puzzle(1, 5), 4).filter(_.isDefined).head.get)
   }
 
@@ -66,7 +67,7 @@ class RadioActive$Test extends org.scalatest.FunSuite {
 
   test("testPlan") {
     assert(RadioActive.testPlan(puzzle(2, 15), 6).size == 4368)
-    assert(RadioActive.testPlan(puzzle(2, 15), 6).toList.head._1.size == 4)
+    assert(RadioActive.testPlan(puzzle(2, 15), 6).toList.head._1.size == 5)
   }
 
 }
