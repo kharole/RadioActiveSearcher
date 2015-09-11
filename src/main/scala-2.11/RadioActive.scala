@@ -2,21 +2,6 @@ import scala.collection.BitSet
 
 object RadioActive {
 
-  object |<| {
-    def unapply(s: BitSet): Option[(Int, BitSet)] =
-      if (s.isEmpty) None
-      else Some((s.head, s.tail))
-  }
-
-  def combinations(set: BitSet, k: Int): Stream[BitSet] =
-    if (k == set.size)
-      Stream(set)
-    else
-      set match {
-        case head |<| tail => combinations(tail, k - 1).map(_ + head) ++ combinations(tail, k)
-        case _ => Stream()
-      }
-
   def solvable(combinations: Set[BitSet], attempts: Int): Boolean =
     solve(combinations, attempts).exists(_.isDefined)
 
@@ -48,4 +33,12 @@ object RadioActive {
     } yield (test, testResults._1, testResults._2)).toVector.reverse
 
   def feasible[A](combinations: Set[A], attempts: Int) = combinations.size <= (1 << attempts)
+
+  def puzzle(radioActiveBalls: Int, balls: Int): Set[BitSet] = {
+    (1 to balls).toList.combinations(radioActiveBalls).map(l => BitSet.empty ++ l).toSet
+  }
+
+  def main(args: Array[String]) {
+    println(RadioActive.solve(puzzle(2, 15), 7).filter(_.isDefined).head.get)
+  }
 }
